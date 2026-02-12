@@ -12,5 +12,6 @@ test('has login heading', async ({ page }) => {
 
   // Expect the Login button to be visible
   await expect(page.getByRole('button', { name: 'Login' })).toHaveText('Login');
+  console.log('Login page is displayed correctly');
 });
 
