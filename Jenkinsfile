@@ -1,4 +1,4 @@
-// configuration of Jenkins File for CI/CD pipeline to build and run Playwright tests in Docker container
+// configuration add of Jenkins File for CI/CD pipeline to build and run Playwright tests in Docker container
 pipeline {
     agent any
 
