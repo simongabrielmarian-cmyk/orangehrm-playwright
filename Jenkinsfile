@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     echo "Running tests in Docker container..."
-                    sh "docker run --rm ${DOCKER_IMAGE}"
+                    sh "docker run --rm -v ${WORKSPACE}/playwright-report:/app/playwright-report ${DOCKER_IMAGE}"
                 }
             }
         }
