@@ -1,14 +1,28 @@
 FROM mcr.microsoft.com/playwright:v1.58.1-jammy
 
-# Set the working directory in the container
+# Switch to root to install git
+USER root
+
+# Install git
+RUN apt-get update && \
+    apt-get install -y git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the container
+# Copy dependency files
 COPY package*.json ./
+
+# Install project dependencies
 RUN npm ci
 
-# Copy the rest of the application code to the container
+# Copy project files
 COPY . .
 
-# Expose any necessary ports (if your tests require it, e.g., for a web server)
+# Optional: switch back to non-root (recommended for security)
+USER pwuser
+
+# Run Playwright tests
 CMD ["npx", "playwright", "test"]
