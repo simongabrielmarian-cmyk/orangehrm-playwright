@@ -7,6 +7,7 @@ pipeline {
                 sh 'pwd'
                 sh 'ls -la'
             }
+        }
         stage('Run Tests in Docker') {
             agent {
                 docker {
