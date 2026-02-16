@@ -59,6 +59,7 @@ pipeline {
     post {
         always {
             script {
+                publishHTML (allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'playwright-report/html/', reportFiles: 'index.html', reportName: "Playwright Test Report - Build #${BUILD_NUMBER}")
                 echo "Cleaning up Docker image: ${DOCKER_IMAGE}"
                 sh "docker rmi ${DOCKER_IMAGE} || true"
             }
