@@ -36,7 +36,12 @@ pipeline {
                 script {
                     echo "Running tests in Docker container..."
                     // Run the Docker container, mounting the workspace to access test results
-                    sh "docker run --rm -v ${WORKSPACE}/playwright-report:/app/playwright-report ${DOCKER_IMAGE}"
+                sh """
+                docker run --rm \
+                    -v ${WORKSPACE}/playwright-report:/app/playwright-report \
+                    -v ${WORKSPACE}/test-results:/app/test-results \
+                     ${DOCKER_IMAGE}
+                """
                     echo "Test results are available in the 'playwright-report' directory on the Jenkins workspace."
 
                 }
@@ -47,9 +52,9 @@ pipeline {
             steps {
                 script {
                     echo "Archiving test results..."
-                    // Archive the test results and Playwright report for later viewing in Jenkins
-                    archiveArtifacts artifacts: 'test-results/**', allowEmptyArchive: true
-                    // Archive the Playwright report, allowing for empty archives in case of test failures
+                    // Publish JUnit results (VERY IMPORTANT)
+                    junit 'test-results/results.xml'
+                    // Archive HTML report
                     archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
                 }
             }
