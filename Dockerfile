@@ -6,5 +6,4 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-
 CMD ["npx", "playwright", "test"]

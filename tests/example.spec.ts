@@ -5,6 +5,8 @@ test('has login heading', async ({ page }) => {
 
   // Expect a paragraph to contain login string
   await expect(page.getByRole('heading', { name: 'Login' })).toHaveText('Login');
+  //await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+  //await page.getByRole('heading', { name: 'Login' }).click();
 
   // Expect Username and Password fields to be visible
   await expect(page.getByPlaceholder('Username')).toBeVisible();
