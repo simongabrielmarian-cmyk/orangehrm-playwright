@@ -43,23 +43,21 @@ pipeline {
             steps {
                 script {
                     echo 'Running tests in Docker container...'
-                    // Wipe old results but immediately recreate with open permissions
                     sh """
                         rm -rf ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results
                         mkdir -p ${WORKSPACE}/playwright-report/html ${WORKSPACE}/test-results
                         chmod -R 777 ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results
                     """
+                    // Debug: verify the mount is working with a simple test
                     sh """
                         docker run --rm \
                         --user root \
-                        -v ${WORKSPACE}/playwright-report:/app/playwright-report \
                         -v ${WORKSPACE}/test-results:/app/test-results \
-                        -e CI=true \
                         -w /app \
                         ${DOCKER_IMAGE} \
-                        npx playwright test
+                        sh -c "echo 'mount_test' > /app/test-results/mount_test.txt && ls -la /app/test-results/"
                     """
-                    echo "Test results are available in the 'playwright-report' directory on the Jenkins workspace."
+                    sh "ls -la ${WORKSPACE}/test-results/"
                 }
             }
         }
