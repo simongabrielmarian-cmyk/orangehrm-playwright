@@ -5,14 +5,14 @@ pipeline {
     environment {
         // Define Docker image names using the build number for versioning
         DOCKER_IMAGE = "orangehrm-tests:${BUILD_NUMBER}"
-        DOCKER_IMAGE_LATEST = "orangehrm-tests:latest"
+        DOCKER_IMAGE_LATEST = 'orangehrm-tests:latest'
     }
 
     stages {
         stage('Checkout') {
             steps {
                 script {
-                    echo "Checking out code from repository..."
+                    echo 'Checking out code from repository...'
                     checkout scm
                 }
             }
@@ -22,7 +22,7 @@ pipeline {
             steps {
                 echo "Create folders for test reports and results if they don't exist..."
                 sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
-                }
+            }
         }
 
         stage('Build Docker Image') {
@@ -40,7 +40,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    echo "Running tests in Docker container..."
+                    echo 'Running tests in Docker container...'
                     sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
                     sh """
                         docker run --rm \
@@ -49,14 +49,14 @@ pipeline {
                         ${DOCKER_IMAGE} \
                         npx playwright test
                     """
-                echo "Test results are available in the 'playwright-report' directory on the Jenkins workspace."
+                    echo "Test results are available in the 'playwright-report' directory on the Jenkins workspace."
                 }
             }
         }
         post {
             always {
                 script {
-                    publishHTML (allowMissing: false, alwaysLinkToLastBuild: true, icon:'', keepAll: true, reportDir: 'reports-e2e/html/', reportFiles: 'index.html', reportName: "Playwright Test Report - Build ${BUILD_NUMBER}", reportTitles:'')    
+                    publishHTML(allowMissing: false, alwaysLinkToLastBuild: true, icon:'', keepAll: true, reportDir: 'reports-e2e/html/', reportFiles: 'index.html', reportName: "Playwright Test Report - Build ${BUILD_NUMBER}", reportTitles:'')
                     junit stdioRetention: 'ALL', testResults: 'reports-e2e/results.xml'
                     echo "Cleaning up Docker image: ${DOCKER_IMAGE}"
                     sh "docker rmi ${DOCKER_IMAGE} || true"
@@ -64,11 +64,12 @@ pipeline {
             }
 
             success {
-                echo "✅ Tests passed successfully!"
+                echo '✅ Tests passed successfully!'
             }
 
             failure {
-                echo "❌ Tests failed!"
+                echo '❌ Tests failed!'
             }
         }
+    }
 }
