@@ -66,6 +66,7 @@ pipeline {
                     sh "docker rmi ${DOCKER_IMAGE} || true"
                 }
             }
+        }
 
             success {
                 echo '✅ Tests passed successfully!'
