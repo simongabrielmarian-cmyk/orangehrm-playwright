@@ -18,26 +18,26 @@ pipeline {
             }
         }
 
-        stage('Prepare Folders') {
-            steps {
-                sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
+    stage('Prepare Folders') {
+        steps {
+            echo "Create folders for test reports and results if they don't exist..."
+            sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-
-                // Build the Docker image using the Dockerfile in the repository
-                script {
-                    echo "Building Docker image: ${DOCKER_IMAGE}"
-                    sh "docker build -t ${DOCKER_IMAGE} ."
-                    // Tag the image as 'latest' for easier reference in future runs
-                    sh "docker tag ${DOCKER_IMAGE} ${DOCKER_IMAGE_LATEST}"
+    stage('Build Docker Image') {
+        steps {
+            // Build the Docker image using the Dockerfile in the repository
+            script {
+                echo "Building Docker image: ${DOCKER_IMAGE}"
+                sh "docker build -t ${DOCKER_IMAGE} ."
+                // Tag the image as 'latest' for easier reference in future runs
+                sh "docker tag ${DOCKER_IMAGE} ${DOCKER_IMAGE_LATEST}"
                 }
             }
         }
 
-        stage('Run Tests') {
+    stage('Run Tests') {
         steps {
             script {
                 echo "Running tests in Docker container..."
@@ -52,22 +52,17 @@ pipeline {
         }
     }
 }
-
-
-
-        stage('Archive Results') {
-            steps {
-                script {
-                    echo "Archiving test results..."
-                    // Publish JUnit results (VERY IMPORTANT)
-                    junit 'test-results/results.xml'
-                    // Archive HTML report
-                    archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
-                }
+    stage('Archive Results') {
+        steps {
+            script {
+                echo "Archiving test results..."
+                // Publish JUnit results (VERY IMPORTANT)
+                junit 'test-results/results.xml'
+                // Archive HTML report
+                archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
             }
         }
     }
-
     post {
         always {
             script {
