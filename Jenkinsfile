@@ -18,6 +18,12 @@ pipeline {
             }
         }
 
+        stage('Prepare Folders') {
+            steps {
+                sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
 
