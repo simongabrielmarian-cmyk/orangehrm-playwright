@@ -14,6 +14,9 @@ pipeline {
                 script {
                     echo 'Checking out code from repository...'
                     checkout scm
+                    echo 'Creating folders in Jenkins workspace...'
+                    sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
+                    sh "ls -la ${WORKSPACE}"  // check if folders exist
                 }
             }
         }
