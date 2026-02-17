@@ -20,12 +20,12 @@ pipeline {
             }
         }
 
-        stage('Prepare Folders') {
-            steps {
-                echo "Create folders for test reports and results if they don't exist..."
-                sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
-            }
-        }
+        // stage('Prepare Folders') {
+        //     steps {
+        //         echo "Create folders for test reports and results if they don't exist..."
+        //         sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
+        //     }
+        // }
 
         stage('Build Docker Image') {
             steps {
