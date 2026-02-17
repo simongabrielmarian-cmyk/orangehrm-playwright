@@ -1,4 +1,3 @@
-// configuration add of Jenkins File for CI/CD pipeline to build and run Playwright tests in Docker container
 pipeline {
     agent any
 
@@ -56,25 +55,34 @@ pipeline {
                 }
             }
         }
-        post {
-            always {
-                script {
-                    sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
-                    publishHTML(allowMissing: false, alwaysLinkToLastBuild: true, icon:'', keepAll: true, reportDir: 'playwright-report/', reportFiles: 'index.html', reportName: "Playwright Test Report - Build ${BUILD_NUMBER}", reportTitles:'')
-                    junit stdioRetention: 'ALL', testResults: 'playwright-report/results.xml'
-                    echo "Cleaning up Docker image: ${DOCKER_IMAGE}"
-                    sh "docker rmi ${DOCKER_IMAGE} || true"
-                }
+    }
+
+    post {
+        always {
+            script {
+                sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
+                publishHTML(
+                    allowMissing: false, 
+                    alwaysLinkToLastBuild: true, 
+                    icon:'', 
+                    keepAll: true, 
+                    reportDir: 'playwright-report/', 
+                    reportFiles: 'index.html', 
+                    reportName: "Playwright Test Report - Build ${BUILD_NUMBER}", 
+                    reportTitles:''
+                )
+                junit stdioRetention: 'ALL', testResults: 'playwright-report/results.xml'
+                echo "Cleaning up Docker image: ${DOCKER_IMAGE}"
+                sh "docker rmi ${DOCKER_IMAGE} || true"
             }
         }
 
-            success {
-                echo '✅ Tests passed successfully!'
-            }
+        success {
+            echo '✅ Tests passed successfully!'
+        }
 
-            failure {
-                echo '❌ Tests failed!'
-            }
+        failure {
+            echo '❌ Tests failed!'
         }
     }
 }
