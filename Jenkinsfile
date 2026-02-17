@@ -43,6 +43,7 @@ pipeline {
             steps {
                 script {
                     echo 'Running tests in Docker container...'
+                    sh "rm -rf ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
                     sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
                     sh """
                         docker run --rm \
@@ -60,7 +61,6 @@ pipeline {
     post {
         always {
             script {
-                sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
                 publishHTML(
                     allowMissing: false, 
                     alwaysLinkToLastBuild: true,
