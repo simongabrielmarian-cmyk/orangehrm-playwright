@@ -36,17 +36,14 @@ pipeline {
                 script {
                     echo "Running tests in Docker container..."
                     // Run the Docker container, mounting the workspace to access test results
-                sh """
-                docker run --rm \
-                    -v ${WORKSPACE}/playwright-report:/playwright-report \
-                    -v ${WORKSPACE}/test-results:/test-results \
-                     ${DOCKER_IMAGE}
-                """
+                    sh "docker run --rm -v ${WORKSPACE}/playwright-report:/app/playwright-report ${DOCKER_IMAGE}"
                     echo "Test results are available in the 'playwright-report' directory on the Jenkins workspace."
 
                 }
             }
         }
+
+
 
         stage('Archive Results') {
             steps {
