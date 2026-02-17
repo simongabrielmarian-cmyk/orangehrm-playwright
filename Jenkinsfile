@@ -41,6 +41,7 @@ pipeline {
             steps {
                 script {
                     echo "Running tests in Docker container..."
+                    sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
                     sh """
                         docker run --rm \
                         -v ${WORKSPACE}/playwright-report:/app/playwright-report \
