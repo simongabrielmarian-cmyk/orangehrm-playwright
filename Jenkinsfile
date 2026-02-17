@@ -59,6 +59,7 @@ pipeline {
         post {
             always {
                 script {
+                    sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
                     publishHTML(allowMissing: false, alwaysLinkToLastBuild: true, icon:'', keepAll: true, reportDir: 'reports-e2e/html/', reportFiles: 'index.html', reportName: "Playwright Test Report - Build ${BUILD_NUMBER}", reportTitles:'')
                     junit stdioRetention: 'ALL', testResults: 'reports-e2e/results.xml'
                     echo "Cleaning up Docker image: ${DOCKER_IMAGE}"
