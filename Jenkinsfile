@@ -66,7 +66,7 @@ pipeline {
                     alwaysLinkToLastBuild: true,
                     icon:'', 
                     keepAll: true, 
-                    reportDir: 'playwright-report', 
+                    reportDir: 'playwright-report/',
                     reportFiles: 'index.html', 
                     reportName: "Playwright Test Report - Build ${BUILD_NUMBER}", 
                     reportTitles:''
