@@ -43,12 +43,18 @@ pipeline {
             steps {
                 script {
                     echo 'Running tests in Docker container...'
-                    sh "rm -rf ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
-                    sh "mkdir -p ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results"
+                    // Wipe old results but immediately recreate with open permissions
+                    sh """
+                        rm -rf ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results
+                        mkdir -p ${WORKSPACE}/playwright-report/html ${WORKSPACE}/test-results
+                        chmod -R 777 ${WORKSPACE}/playwright-report ${WORKSPACE}/test-results
+                    """
                     sh """
                         docker run --rm \
                         -v ${WORKSPACE}/playwright-report:/app/playwright-report \
                         -v ${WORKSPACE}/test-results:/app/test-results \
+                        -e CI=true \
+                        -w /app \
                         ${DOCKER_IMAGE} \
                         npx playwright test
                     """
@@ -62,18 +68,22 @@ pipeline {
         always {
             script {
                 publishHTML(
-                    allowMissing: false, 
+                    allowMissing: false,
                     alwaysLinkToLastBuild: true,
-                    icon:'', 
-                    keepAll: true, 
-                    reportDir: 'playwright-report/',
-                    reportFiles: 'index.html', 
-                    reportName: "Playwright Test Report - Build ${BUILD_NUMBER}", 
-                    reportTitles:''
-                )
-                junit stdioRetention: 'ALL', testResults: 'test-results/results.xml'
+                    icon: '',
+                    keepAll: true,
+                    reportDir: 'playwright-report/html',   // ← match the outputFolder in playwright.config.ts
+                    reportFiles: 'index.html',
+                    reportName: "Playwright Test Report - Build ${BUILD_NUMBER}",
+                    reportTitles: ''
+)
+                junit allowEmptyResults: true, stdioRetention: 'ALL', testResults: 'test-results/results.xml'
+
                 echo "Cleaning up Docker image: ${DOCKER_IMAGE}"
                 sh "docker rmi ${DOCKER_IMAGE} || true"
+
+                sh "ls -la ${WORKSPACE}/playwright-report"
+                sh "ls -la ${WORKSPACE}/test-results"
             }
         }
 
