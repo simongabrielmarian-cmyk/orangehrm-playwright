@@ -24,8 +24,8 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ['list'],
-    ['html', { outputFolder: 'playwright-report', open: process.env.CI ? 'never' : 'on-failure' }], 
-    ['junit', { outputFile: 'test-results/results.xml' }]
+    ['html', { outputFolder: 'playwright-report/index.html', open: process.env.CI ? 'never' : 'on-failure' }], 
+    ['junit', { outputFile: 'playwright-report/results.xml' }]
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
