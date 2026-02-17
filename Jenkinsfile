@@ -51,6 +51,7 @@ pipeline {
                     """
                     sh """
                         docker run --rm \
+                        --user root \
                         -v ${WORKSPACE}/playwright-report:/app/playwright-report \
                         -v ${WORKSPACE}/test-results:/app/test-results \
                         -e CI=true \
